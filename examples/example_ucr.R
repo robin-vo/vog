@@ -8,7 +8,7 @@
 # UCR is a credibility-based reserving method that adaptively estimates
 # the weight on individual accident year experience vs. pooled information.
 
-library(vog)
+library(hgr)
 
 # =============================================================================
 # 1. TAYLOR-ASHE DATA
