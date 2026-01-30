@@ -1,27 +1,60 @@
-# vog: Van Oirbeek's Grammar
+# vog
 
-A unified framework for claims reserving in non-life insurance, based on the insight that **classical reserving methods are credibility estimators**.
+An R package implementing methods for hierarchical claims reserving models in non-life insurance, currently including: 
 
-## Overview
+- the Negative Binomial Chain-Ladder (NB-CL) model.
+- an unified claims reserving (UCR) framework based on the insight that **classical reserving methods are credibility estimators**
 
-The `vog` package implements the theoretical framework from "Classical Reserving Methods as Credibility Estimators" (Van Oirbeek, 2026). It provides:
+## NB-CL
 
-1. **Unified Credibility Reserving (UCR)** - A new method that nests Chain-Ladder, Cape Cod, and Bornhuetter-Ferguson as special cases with data-adaptive credibility weights
+The NB-CL model provides a full likelihood framework for claim count triangles, addressing limitations of classical Chain-Ladder methods:
 
-2. **Classical Methods** - Implementations of Chain-Ladder, Cape Cod, Bornhuetter-Ferguson, and Mack's distribution-free model
+- **Full likelihood**: Enables likelihood-based inference, AIC/BIC comparison, and LR tests
+- **Overdispersion**: Models variance through dispersion parameter κ with structural interpretation
+- **Bias correction**: REML-like correction for finite-sample bias in κ estimation
+- **Prediction intervals**: Parametric bootstrap incorporating both process and parameter uncertainty
 
-3. **Credibility Theory** - Bühlmann and Bühlmann-Straub credibility estimators with variance component estimation
+## UCR
 
-4. **Negative Binomial Chain-Ladder (NB-CL)** - Full likelihood framework for overdispersed claim counts
+Unified Credibility Reserving (UCR) provides a data-adaptive framework that nests all classical reserving methods as special cases:
+
+- **Unification**: Proves Chain-Ladder, Cape Cod, Bornhuetter-Ferguson, and Mack are all credibility estimators under a single Poisson-Gamma-Multinomial model
+- **Adaptive weights**: Estimates between-year heterogeneity τ² from data via Bühlmann-Straub, automatically selecting the appropriate blend of individual vs pooled information
+- **Method selection**: When τ² is large → UCR ≈ Chain-Ladder; when τ² ≈ 0 → UCR ≈ Cape Cod; with external prior → UCR generalises Bornhuetter-Ferguson
+- **Efficiency gains**: Simulation study shows up to 21% MSE reduction vs Chain-Ladder when rates are homogeneous, while matching Chain-Ladder when heterogeneity is high
+- **Diagnostics**: Credibility weights Z and estimated τ² provide interpretable diagnostics for method appropriateness
 
 ## Installation
 
 ```r
-# Install from GitHub
+# Using devtools
 devtools::install_github("robin-vo/vog")
+
+# Or using remotes
+remotes::install_github("robin-vo/vog")
 ```
 
-## Quick Start
+## Quick Start - NB-CL
+
+```r
+library(vog)
+
+# Fit model to triangle
+fit <- fit_nbcl(triangle)
+print(fit)
+
+# Get reserve estimates
+reserves <- reserve_nbcl(fit)
+
+# Bootstrap prediction intervals (with REML correction)
+boot <- bootstrap_nbcl(fit, B = 5000, correct_kappa = TRUE)
+predict_interval(boot, level = 0.95)
+
+# Diagnostics
+plot_diagnostics(fit)
+```
+
+## Quick Start - UCR
 
 ```r
 library(vog)
@@ -102,10 +135,6 @@ UCR estimates the between-year heterogeneity τ² and sets:
 
 ## References
 
-Van Oirbeek, R. (2026). Classical Reserving Methods as Credibility Estimators: A Unified Bayesian Framework. *Working Paper*.
-
 Van Oirbeek, R. (2026). The Negative Binomial Chain-Ladder: A Full Likelihood Model for Claim Count Reserving. *Working Paper*.
 
-## License
-
-GPL (>= 3)
+Van Oirbeek, R. (2026). Classical Reserving Methods as Credibility Estimators: A Unified Bayesian Framework. *Working Paper*.
