@@ -4,7 +4,7 @@ An R package implementing methods for hierarchical claims reserving models in no
 
 - the Negative Binomial Chain-Ladder (NB-CL) model.
 
-## Overview
+## NB-CL
 
 The NB-CL model provides a full likelihood framework for claim count triangles, addressing limitations of classical Chain-Ladder methods:
 
