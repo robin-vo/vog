@@ -16,11 +16,11 @@ The NB-CL model provides a full likelihood framework for claim count triangles, 
 ## Installation
 
 ```r
-# Install from source
-install.packages("vog", repos = NULL, type = "source")
+# Using devtools
+devtools::install_github("robin-vo/vog")
 
-# Or using devtools
-devtools::install_github("username/vog")
+# Or using remotes
+remotes::install_github("robin-vo/vog")
 ```
 
 ## Quick Start
