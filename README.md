@@ -75,9 +75,18 @@ delta_method_var(incr)
 
 ```r
 library(hgr)
+library(ChainLadder)
 
-fit <- fit_nbcl(triangle)
+# Convert to incremental triangle (NB-CL works on incremental data)
+incr <- cum2incr(GenIns)
+
+# Fit Negative Binomial Chain-Ladder
+fit <- fit_nbcl(incr)
+
+# Parametric bootstrap for predictive distribution
 boot <- bootstrap_nbcl(fit, B = 5000, correct_kappa = TRUE)
+
+# Prediction interval for the total reserve
 predict_interval(boot, level = 0.95)
 ```
 
