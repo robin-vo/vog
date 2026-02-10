@@ -50,24 +50,33 @@ library(ChainLadder)
 # Convert cumulative triangle to incremental
 incr <- cum2incr(GenIns)
 
-# Check if Dirichlet model is appropriate
+# 1. Check if Dirichlet model is appropriate
 diagnose_c(incr)
-#> c_hat = 107.7 >= 30: stable development. Multinomial framework appropriate.
 
-# Predictive intervals (works with ANY development proportions)
+# 2. Estimate development proportions (optional, shown for transparency)
+dev <- estimate_dev_proportions(incr)
+dev$pi_hat
+dev$F_hat
+
+# 3. Estimate concentration parameter directly
+c_hat <- estimate_c(incr, pi_hat = dev$pi_hat)
+c_hat
+
+# 4. Predictive intervals (works with ANY development proportions)
 boot <- multinomial_bootstrap(incr, B = 10000)
 print(boot)
 
-# Use with Bornhuetter-Ferguson or any custom proportions
-# Example: BF proportions from external loss ratio and earned premium
+# 5. Use with Bornhuetter-Ferguson or any custom proportions
 earned_premium <- c(10e6, 11e6, 12e6, 13e6, 14e6, 15e6, 16e6, 17e6, 18e6, 19e6)
-elr <- 0.65  # expected loss ratio
+elr <- 0.65
 bf_ultimate <- earned_premium * elr
 bf_pi <- colSums(incr, na.rm = TRUE) / sum(bf_ultimate)
-bf_pi <- bf_pi / sum(bf_pi)  # normalise to probability vector
-boot_bf <- multinomial_bootstrap(incr, pi_hat = bf_pi, B = 10000)
+bf_pi <- bf_pi / sum(bf_pi)
 
-# Fast delta method (no bootstrap)
+boot_bf <- multinomial_bootstrap(incr, pi_hat = bf_pi, B = 10000)
+print(boot_bf)
+
+# 6. Fast delta method (no bootstrap)
 delta_method_var(incr)
 ```
 
