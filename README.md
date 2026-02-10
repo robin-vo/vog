@@ -94,10 +94,26 @@ predict_interval(boot, level = 0.95)
 
 ```r
 library(hgr)
+library(ChainLadder)
 
-ucr_fit <- ucr(triangle)
-summary(ucr_fit)
-compare_reserves(triangle)
+# Load a standard cumulative triangle
+triangle <- GenIns   # UCR works on cumulative data
+
+# Optional: choose an exposure measure (default = first development period)
+exposure <- triangle[, 1]
+
+# Fit the Unified Credibility Reserving model
+ucr_fit <- ucr(triangle, exposure = exposure)
+
+# Inspect credibility structure and reserve estimates
+print(ucr_fit)
+
+# Visual diagnostics (rates, credibility weights, reserve comparison)
+plot(ucr_fit, which = 1:3)
+
+# Compare classical methods and UCR
+comparison <- compare_reserves(triangle, exposure = exposure)
+print(comparison)
 ```
 
 ## Key Functions
