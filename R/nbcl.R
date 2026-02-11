@@ -72,11 +72,12 @@ long_to_triangle <- function(df, I = NULL, J = NULL) {
 #' @param link Link function (default log)
 #' @return An object of class "nbcl" containing the fitted model and metadata
 #' @export
-fit_nbcl <- function(triangle, link = log) {
+
+fit_nbcl <- function(triangle) {
   df <- triangle_to_long(triangle)
   n <- nrow(df)
   
-  fit <- MASS::glm.nb(A ~ AY + DY, data = df, link = link)
+  fit <- MASS::glm.nb(A ~ AY + DY, data = df, link = log)
   
   p <- length(coef(fit))
   kappa_mle <- fit$theta
