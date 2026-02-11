@@ -69,10 +69,10 @@ long_to_triangle <- function(df, I = NULL, J = NULL) {
 #' Fit Negative Binomial Chain-Ladder model
 #'
 #' @param triangle A matrix representing the run-off triangle (incremental claims)
-#' @param link Link function (default "log")
+#' @param link Link function (default log)
 #' @return An object of class "nbcl" containing the fitted model and metadata
 #' @export
-fit_nbcl <- function(triangle, link = "log") {
+fit_nbcl <- function(triangle, link = log) {
   df <- triangle_to_long(triangle)
   n <- nrow(df)
   
